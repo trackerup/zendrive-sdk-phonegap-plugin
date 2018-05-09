@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    id="com.zendrive.phonegap.sdk"
+    id="com-zendrive-phonegap-sdk"
     version="2.3.3">
 
     <name>Zendrive</name>
@@ -38,13 +38,12 @@
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <service android:name="com.zendrive.sdk.services.UserActivityService" />
             <service android:name="com.zendrive.sdk.services.ZendriveService" />
-            <receiver android:name="com.zendrive.sdk.receiver.WakeupReceiver"
-                android:label="WakeupReceiver"></receiver>
+            <receiver android:name="com.zendrive.phonegap.ZendriveCordovaBroadcastReceiver" android:label="ZendriveCordovaBroadcastReceiver"></receiver>
             <service android:name="com.zendrive.phonegap.ZendriveIntentService" />
         </config-file>
 
         <source-file src="src/android/com/zendrive/phonegap/ZendriveCordovaPlugin.java" target-dir="src/com/zendrive/phonegap" />
-        <source-file src="src/android/com/zendrive/phonegap/ZendriveIntentService.java" target-dir="src/com/zendrive/phonegap" />
+        <source-file src="src/android/com/zendrive/phonegap/ZendriveCordovaBroadcastReceiver.java" target-dir="src/com/zendrive/phonegap" />
         <source-file src="src/android/com/zendrive/phonegap/ZendriveManager.java" target-dir="src/com/zendrive/phonegap" />
 
         <!-- External Libraries -->

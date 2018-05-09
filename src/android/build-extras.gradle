@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     compile 'com.google.android.gms:play-services-location:+'
-    compile ('com.zendrive.sdk.android:ZendriveSDK:3.3.0@aar') {
+    compile ('com.zendrive.sdk.android:ZendriveSDK:+') {
         transitive = true
     }
 }

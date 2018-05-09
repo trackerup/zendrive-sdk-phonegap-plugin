@@ -1,19 +1,26 @@
 package com.zendrive.phonegap;
 
+import android.content.Context;
+
 import com.zendrive.sdk.AccidentInfo;
 import com.zendrive.sdk.ActiveDriveInfo;
+import com.zendrive.sdk.AnalyzedDriveInfo;
 import com.zendrive.sdk.DriveInfo;
 import com.zendrive.sdk.DriveResumeInfo;
 import com.zendrive.sdk.DriveStartInfo;
-import com.zendrive.sdk.LocationPoint;
+import com.zendrive.sdk.LocationPointWithTimestamp;
 import com.zendrive.sdk.Zendrive;
 import com.zendrive.sdk.ZendriveLocationSettingsResult;
+import com.zendrive.sdk.ZendriveOperationCallback;
+import com.zendrive.sdk.ZendriveOperationResult;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import br.com.pulluptecnologia.tracker.MainActivity;
 
 /**
  * Created by yogesh on 7/20/16.
@@ -51,7 +58,17 @@ public class ZendriveManager {
         return sharedInstance;
     }
 
-    public static synchronized void teardown() {
+    public static synchronized void teardown(Context context, final CallbackContext callbackContext) {
+        Zendrive.teardown(context, new ZendriveOperationCallback() {
+            @Override
+            public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
+                if(zendriveOperationResult.isSuccess()){
+                    callbackContext.success();
+                }else{
+                    callbackContext.error(zendriveOperationResult.getErrorMessage());
+                }
+            }
+        });
         sharedInstance = null;
     }
 
@@ -124,10 +141,10 @@ public class ZendriveManager {
         }
     }
 
-    public JSONObject getActiveDriveInfo() {
+    public JSONObject getActiveDriveInfo(Context context, final CallbackContext callbackContext) {
         try {
             JSONObject activeDriveInfoObject = new JSONObject();
-            ActiveDriveInfo activeDriveInfo = Zendrive.getActiveDriveInfo();
+            ActiveDriveInfo activeDriveInfo = Zendrive.getActiveDriveInfo(context );
             activeDriveInfoObject.put(kStartTimestampKey, activeDriveInfo.startTimeMillis);
             activeDriveInfoObject.put(kTrackingIdKey,
                     (activeDriveInfo.trackingId != null) ? activeDriveInfo.trackingId:JSONObject.NULL);
@@ -146,7 +163,7 @@ public class ZendriveManager {
             JSONObject driveInfoObject = new JSONObject();
             driveInfoObject.put(kStartTimestampKey, driveInfo.startTimeMillis);
             driveInfoObject.put(kEndTimestampKey, driveInfo.endTimeMillis);
-            driveInfoObject.put(kIsValidKey, driveInfo.isValid);
+
             driveInfoObject.put(kAverageSpeedKey, driveInfo.averageSpeed);
             driveInfoObject.put(kDistanceKey, driveInfo.distanceMeters);
 
@@ -156,11 +173,11 @@ public class ZendriveManager {
             }
             JSONArray waypointsArray = new JSONArray();
             for (int i = 0; i<waypointsCount; i++) {
-                LocationPoint locationPoint = driveInfo.waypoints.get(i);
+                LocationPointWithTimestamp locationPoint = driveInfo.waypoints.get(i);
 
                 JSONObject driveLocationObject = new JSONObject();
-                driveLocationObject.put(kLatitudeKey, locationPoint.latitude);
-                driveLocationObject.put(kLongitudeKey, locationPoint.longitude);
+                driveLocationObject.put(kLatitudeKey, locationPoint.location.latitude);
+                driveLocationObject.put(kLongitudeKey, locationPoint.location.longitude);
                 waypointsArray.put(driveLocationObject);
             }
             driveInfoObject.put(kWaypointsKey, waypointsArray);
@@ -187,6 +204,10 @@ public class ZendriveManager {
     }
 
     public void onLocationSettingsChange(ZendriveLocationSettingsResult zendriveLocationSettingsResult) {
+
+    }
+
+    public void onDriveAnalyzed(AnalyzedDriveInfo analyzedDriveInfo) {
 
     }
 }

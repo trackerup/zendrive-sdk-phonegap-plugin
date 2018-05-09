@@ -1,6 +1,6 @@
 zendrive-sdk-phonegap-plugin
 ============================
-This is the official plugin for <a href="http://www.zendrive.com">Zendrive</a> in Apache Cordova/PhoneGap!
+This is the fork from official plugin for <a href="http://www.zendrive.com">Zendrive</a> in Apache Cordova/PhoneGap!
 
 <a href="http://www.zendrive.com">Zendrive</a> is commited to improving driving and transportation for everyone through better data and analytics.
 <br/>
@@ -19,7 +19,8 @@ You can integrate zendrive-sdk-phonegap-plugin in your application to get Zendri
 <h3>How to integrate</h3>
 
 <h4>Integrate zendrive phonegap plugin by running the following cordova command</h4>
-<code>cordova plugin add https://github.com/zendrive/zendrive-sdk-phonegap-plugin</code>
+<code>cordova plugin add https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git</code>
+
 
 <h4>Alternatively if you are using plugman in your application then use the following</h4>
 <h5>For Android</h5>
