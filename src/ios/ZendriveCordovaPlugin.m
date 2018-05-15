@@ -15,7 +15,6 @@ static NSString * const kStartTimestampKey = @"startTimestamp";
 static NSString * const kStartLocationKey = @"startLocation";
 
 #pragma mark - ZendriveDriveInfo dictionary keys
-static NSString * const kIsValidKey = @"isValid";
 static NSString * const kEndTimestampKey = @"endTimestamp";
 static NSString * const kAverageSpeedKey = @"averageSpeed";
 static NSString * const kDistanceKey = @"distance";
@@ -237,8 +236,8 @@ static NSString * const kDriverAttributesKey = @"driverAttributes";
         return;
     }
     id startLocationDictionary = [NSNull null];
-    if (startInfo.startLocation) {
-        startLocationDictionary = [startInfo.startLocation toDictionary];
+    if (startInfo.waypoints && startInfo.waypoints.count > 0) {
+        startLocationDictionary = [startInfo.waypoints[0] toDictionary];
     }
     NSDictionary *startInfoDictionary = @{kStartTimestampKey:@(startInfo.startTimestamp),
                                           kStartLocationKey:startLocationDictionary};
@@ -261,7 +260,6 @@ static NSString * const kDriverAttributesKey = @"driverAttributes";
     }
     NSDictionary *driveInfoDictionary = @{kStartTimestampKey:@(driveInfo.startTimestamp),
                                           kEndTimestampKey:@(driveInfo.endTimestamp),
-                                          kIsValidKey:@(driveInfo.isValid),
                                           kAverageSpeedKey:@(driveInfo.averageSpeed),
                                           kDistanceKey:@(driveInfo.distance),
                                           kWaypointsKey:waypointsArray};

@@ -96,7 +96,7 @@
       "2.3.3": {
         "cordova": ">=7.1.0",
         "cordova-android": ">=6.3.0",
-        "cordova-ios": ">=4.4.0",
+        "cordova-ios": ">=4.5.4",
         "cordova-cli": ">=6.4.0"
       },
       "<2.3.3": {
