@@ -20,8 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.com.pulluptecnologia.tracker.MainActivity;
-
 /**
  * Created by yogesh on 7/20/16.
  */
