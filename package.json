@@ -1,136 +1,33 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "com-zendrive-phonegap-sdk@git+https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-        "scope": null,
-        "escapedName": "com-zendrive-phonegap-sdk",
-        "name": "com-zendrive-phonegap-sdk",
-        "rawSpec": "git+https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-        "spec": "git+https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-        "type": "hosted",
-        "hosted": {
-          "type": "github",
-          "ssh": "git@github.com:pulluptech/zendrive-sdk-phonegap-plugin.git",
-          "sshUrl": "git+ssh://git@github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-          "httpsUrl": "git+https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-          "gitUrl": "git://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-          "shortcut": "github:pulluptech/zendrive-sdk-phonegap-plugin",
-          "directUrl": "https://raw.githubusercontent.com/pulluptech/zendrive-sdk-phonegap-plugin/master/package.json"
-        }
-      },
-      "D:\\trabalhos\\trackerup\\trackerup\\node_modules"
-    ],
-    [
-      {
-        "raw": "https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-        "scope": null,
-        "escapedName": null,
-        "name": null,
-        "rawSpec": "https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-        "spec": "git+https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-        "type": "hosted",
-        "hosted": {
-          "type": "github",
-          "ssh": "git@github.com:pulluptech/zendrive-sdk-phonegap-plugin.git",
-          "sshUrl": "git+ssh://git@github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-          "httpsUrl": "git+https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-          "gitUrl": "git://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-          "shortcut": "github:pulluptech/zendrive-sdk-phonegap-plugin",
-          "directUrl": "https://raw.githubusercontent.com/pulluptech/zendrive-sdk-phonegap-plugin/master/package.json"
-        }
-      },
-      "D:\\trabalhos\\trackerup\\trackerup\\node_modules"
-    ]
-  ],
-  "_from": "git+https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-  "_id": "com-zendrive-phonegap-sdk@2.3.3",
-  "_inCache": true,
-  "_location": "/com-zendrive-phonegap-sdk",
-  "_phantomChildren": {},
-  "_requested": {
-    "raw": "https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-    "scope": null,
-    "escapedName": null,
-    "name": null,
-    "rawSpec": "https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-    "spec": "git+https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-    "type": "hosted",
-    "hosted": {
-      "type": "github",
-      "ssh": "git@github.com:pulluptech/zendrive-sdk-phonegap-plugin.git",
-      "sshUrl": "git+ssh://git@github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-      "httpsUrl": "git+https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-      "gitUrl": "git://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-      "shortcut": "github:pulluptech/zendrive-sdk-phonegap-plugin",
-      "directUrl": "https://raw.githubusercontent.com/pulluptech/zendrive-sdk-phonegap-plugin/master/package.json"
-    }
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "git+https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git#7678e38ac24020d685e8f0695b8507c9151cd8d3",
-  "_shasum": "2599d064d0d658f8d12361599afb6542a45aa2a8",
-  "_shrinkwrap": null,
-  "_spec": "https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git",
-  "_where": "D:\\trabalhos\\trackerup\\trackerup\\node_modules",
-  "author": {
-    "name": "Zendrive, PullUp"
-  },
-  "bugs": {
-    "url": "https://github.com/pulluptech/zendrive-sdk-phonegap-plugin/issues"
-  },
+  "name": "zendrive-cordova-plugin",
+  "version": "0.1.0",
+  "description": "Phonegap plugin for the Zendrive SDK.",
   "cordova": {
     "id": "com-zendrive-phonegap-sdk",
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   },
-  "dependencies": {},
-  "description": "Phonegap plugin for the Zendrive SDK.",
-  "devDependencies": {},
-  "engines": {
-    "cordovaDependencies": {
-      "2.3.3": {
-        "cordova": ">=7.1.0",
-        "cordova-android": ">=6.3.0",
-        "cordova-ios": ">=4.5.4",
-        "cordova-cli": ">=6.4.0"
-      },
-      "<2.3.3": {
-        "cordova": ">=6.4.0",
-        "cordova-android": ">=6.0.0",
-        "cordova-ios": ">=4.3.0"
-      }
-    }
-  },
-  "gitHead": "556b03d66f6759805ec014afbc0a93cf3ba38335",
-  "homepage": "https://github.com/pulluptech/zendrive-sdk-phonegap-plugin#README",
-  "keywords": [
-    "gps",
-    "location",
-    "tracking",
-    "geolocation",
-    "geofence",
-    "geofencing",
-    "background",
-    "ecosystem:cordova",
-    "cordova-android",
-    "cordova-ios",
-    "cordova-wp8",
-    "cordova",
-    "phonegap"
-  ],
-  "license": "MIT",
-  "name": "com-zendrive-phonegap-sdk",
-  "optionalDependencies": {},
-  "readme": "zendrive-sdk-phonegap-plugin\r\n============================\r\nThis is the fork from official plugin for <a href=\"http://www.zendrive.com\">Zendrive</a> in Apache Cordova/PhoneGap!\r\n\r\n<a href=\"http://www.zendrive.com\">Zendrive</a> is commited to improving driving and transportation for everyone through better data and analytics.\r\n<br/>\r\nYou can integrate zendrive-sdk-phonegap-plugin in your application to get Zendrive's driver centric analytics and insights for your fleet.\r\n\r\n<h3>Zendrive plugin performs three key functions.</h3>\r\n<ul style=\"list-style-position: inside\">\r\n<li> Automatically collects data from various sensors on mobile phone while minimizing the battery impact.</li>\r\n<li> Provides end points to application to manually start/end drives.</li>\r\n<li> Uploads the data back to Zendrive servers for analysis. </li>\r\n</ul>\r\n\r\n<p class=\"center\">\r\n<img src=\"http://developers.zendrive.com/static/img/dev_intro_1.png\" />\r\n\r\n<h3>How to integrate</h3>\r\n\r\n<h4>Integrate zendrive phonegap plugin by running the following cordova command</h4>\r\n<code>cordova plugin add https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git</code>\r\n\r\n\r\n<h4>Alternatively if you are using plugman in your application then use the following</h4>\r\n<h5>For Android</h5>\r\n<code>plugman install --platform android --project ./platforms/android --plugin https://github.com/zendrive/zendrive-sdk-phonegap-plugin.git</code>\r\n\r\n<h5>For iOS</h5>\r\n<code>plugman install --platform ios --project ./platforms/ios --plugin https://github.com/zendrive/zendrive-sdk-phonegap-plugin.git</code>\r\n\r\n\r\n<h4>Alternatively if you are using phonegap build then add the following in your config.xml ( plugin only supported for android )</h4>\r\n<code>&lt;gap:plugin name=\"com.zendrive.phonegap.sdk\" version=\"2.0.0\" /&gt;</code>\r\n\r\n\r\n<h3>Enable Zendrive in the app</h3>\r\n<p>Refer <a href=\"http://zendrive-root.bitbucket.org/phonegap/docs/jsdoc-2.0.0/Zendrive.html\">Full Documentation</a> for details.</p>\r\n<h4>Initialize the SDK</h4>\r\n<p>Typically this is done after the driver logs into the application and you know the identity of the driver.\r\nAfter this call, Zendrive SDK will start automatic trip detection and collect driver data. You can also record trips manually from your application.</p>\r\n```\r\nvar applicationKey = ZENDRIVE_APPLICATION_KEY;\r\nvar driverId = <DRIVER_ID>;\r\nvar config = new Zendrive.ZendriveConfiguration(applicationKey, driverId);\r\nvar driverAttributes = new Zendrive.ZendriveDriverAttributes();\r\ndriverAttributes.firstName = \"first_name\";\r\ndriverAttributes.lastName = \"last_name\";\r\ndriverAttributes.email = \"e@mail.com\";\r\ndriverAttributes.group = \"group1\";\r\ndriverAttributes.phoneNumber = \"11234567890\"\r\ndriverAttributes.driverStartDate = 1428953991;\r\ndriverAttributes.setCustomAttribute(\"custom_key\", \"custom_value\");\r\nconfig.driverAttributes = driverAttributes;\r\nconfig.driveDetectionMode = Zendrive.ZendriveDriveDetectionMode.ZendriveDriveDetectionModeAutoON;\r\n\r\nvar processStartOfDrive = function(zendriveDriveStartInfo) {\r\n    alert(\"processStartOfDrive: \" + JSON.stringify(zendriveDriveStartInfo));\r\n};\r\nvar processEndOfDrive = function(zendriveDriveInfo) {\r\n    alert(\"processEndOfDrive: \" + JSON.stringify(zendriveDriveInfo));\r\n};\r\nvar processLocationDenied = function() {\r\n    alert(\"Location denied, please enable location services to keep Zendrive working\");\r\n};\r\n\r\nvar zendriveCallback = new Zendrive.ZendriveCallback(processStartOfDrive,\r\n    processEndOfDrive, processLocationDenied);\r\n\r\nZendrive.setup(config, zendriveCallback,\r\n    function() {\r\n        alert(\"Setup done!\");\r\n    },\r\n    function (error) {\r\n        alert(\"Setup failed: \" + error);\r\n    }\r\n);\r\n```\r\n\r\n<ul style=\"list-style-position: inside\">\r\n<li>If you don't have the ZENDRIVE_APPLICATION_KEY, sign up on the Zendrive Developer Portal and get the key.</li>\r\n<li>The <DRIVER_ID> is an ID for the driver currently using the application. Each driver using the application needs a unique ID</li>\r\n</ul>\r\n<p>See the <a target=\"_blank\" href=\"http://zendrive-root.bitbucket.org/phonegap/docs/jsdoc-2.0.0/Zendrive.html#.setup\">SDK Reference</a> for more details about setup.</p>\r\n\r\n<h4>Manual Trip Tagging</h4>\r\n<p>The Zendrive SDK works in the background and automatically detects trips and tracks driving behaviour. However, some applications already have knowledge of point-to-point trips made by the driver using the application. For example - a taxi metering app. If your application has this knowledge, it can indicate that to the Zendrive SDK explicitly.</p>\r\n```\r\nZendrive.startDrive(<TRACKING_ID>);  // A non empty <TRACKING_ID> must be specified\r\nZendrive.stopDrive(<TRACKING_ID>);  // The <TRACKING_ID> should be same as passed in startDrive\r\n```\r\n<p>The &lt;TRACKING_ID&gt; can be used to find Zendrive trips with this ID in the <a href=\"https://developers.zendrive.com/docs/api/\" target=\"_blank\">Zendrive Analytics API</a>. See the <a href=\"http://zendrive-root.bitbucket.org/phonegap/docs/jsdoc-2.0.0/Zendrive.html#.startDrive\" target=\"_blank\">SDK Reference</a> for more details about these calls.</p>\r\n\r\n<h4>Driving Sessions</h4>\r\n<p>Some applications want to track multiple point-to-point trips together as a single entity. For example, a car rental app may want to track all trips made by a user between a rental car pickup and dropoff as a single entity. This can be done using sessions in the Zendrive SDK.\r\nSessions can be used in the Zendrive SDK by making the following calls.</p>\r\n```\r\nZendrive.startSession(<SESSION_ID>);  // A non empty <SESSION ID> must be specified\r\nZendrive.stopSession();\r\n```\r\n<p>All trips within a session are tagged with the session id. The session id can then be used to lookup Zendrive trips belonging to this session using the <a href=\"https://developers.zendrive.com/docs/api/\" target=\"_blank\">Zendrive Analytics API</a>. See the <a href=\"http://zendrive-root.bitbucket.org/phonegap/docs/jsdoc-2.0.0/Zendrive.html#.startSession\" target=\"_blank\">SDK Reference</a> for more details about these calls.</p>\r\n\r\n<h4>Controlling Automatic Drive Detection</h4>\r\n<p>The Zendrive SDK works in the background and automatically detects trips and tracks driving behaviour. If needed, an application can change this behaviour. For example, a rideshare app may want to automatically track all drives made by a driver only when the driver is on-duty and not collect any data for off-duty drives.</p>\r\n<p>The application can specify the required behaviour via an additional argument during setup of the Zendrive SDK. ZendriveDriveDetectionModeAutoOFF disables automatic drive detection in the SDK.</p>\r\n```\r\n// ZendriveDriveDetectionMode.ZendriveDriveDetectionModeAutoOFF disables automatic drive detection in the SDK.\r\nconfig.driveDetectionMode = Zendrive.ZendriveDriveDetectionMode.ZendriveDriveDetectionModeAutoOFF;\r\n```\r\n<p>The application can also temporarily enable Zendrive's auto drive-detection. This can be done by setting the ZendriveDriveDetectionMode.</p>\r\n<p> To Turn on automatic drive detection in the SDK.</p>\r\n```\r\nZendrive.setDriveDetectionMode(Zendrive.ZendriveDriveDetectionMode.ZendriveDriveDetectionModeAutoON);\r\n```\r\n<p> To Turn off automatic drive detection in the SDK.</p>\r\n```\r\nZendrive.setDriveDetectionMode(Zendrive.ZendriveDriveDetectionMode.ZendriveDriveDetectionModeAutoOFF);\r\n```\r\n<h4>Disable the SDK</h4>\r\n<p>To disable the SDK at any point in the application, you can invoke this method. The Zendrive SDK goes completely silent after this call and does not track any driving behaviour again.</p>\r\n```\r\nZendrive.teardown();\r\n```\r\n<p>The application needs to re-initalize the SDK to start tracking driving behaviour.</p>\r\n\r\n<br/>\r\n<br/>\r\n<br/>\r\n",
-  "readmeFilename": "README.md",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pulluptech/zendrive-sdk-phonegap-plugin.git"
+    "url": "git+https://github.com/trackerup/zendrive-sdk-phonegap-plugin.git"
   },
-  "version": "2.3.3"
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.4.0"
+    }
+  ],
+  "author": "Pullup",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trackerup/zendrive-sdk-phonegap-plugin/issues"
+  },
+  "homepage": "https://github.com/trackerup/zendrive-sdk-phonegap-plugin#readme"
 }
