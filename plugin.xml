@@ -36,10 +36,9 @@
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <receiver android:name="com.zendrive.phonegap.ZendriveCordovaBroadcastReceiver" android:label="ZendriveCordovaBroadcastReceiver"></receiver>
             <service android:name="com.zendrive.sdk.services.UserActivityService" />
             <service android:name="com.zendrive.sdk.services.ZendriveService" />
-            <receiver android:name="com.zendrive.phonegap.ZendriveCordovaBroadcastReceiver" android:label="ZendriveCordovaBroadcastReceiver"></receiver>
-            <service android:name="com.zendrive.phonegap.ZendriveIntentService" />
         </config-file>
 
         <source-file src="src/android/com/zendrive/phonegap/ZendriveCordovaPlugin.java" target-dir="src/com/zendrive/phonegap" />
