@@ -89,10 +89,11 @@ public class ZendriveManager {
             throws JSONException {
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         if (null != this.processStartOfDriveCallback) {
-            /* Delete old callback
-             * Sending NO_RESULT doesn't call any js callback method
-             * Setting keepCallback to false would make sure that the callback is deleted from
-             * memory after this call */
+            /*
+             * Delete old callback Sending NO_RESULT doesn't call any js callback method
+             * Setting keepCallback to false would make sure that the callback is deleted
+             * from memory after this call
+             */
             result.setKeepCallback(false);
         }
         Boolean hasCallback = args.getBoolean(0);
@@ -108,11 +109,11 @@ public class ZendriveManager {
             throws JSONException {
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         if (null != this.processEndOfDriveCallback) {
-            // Delete old callback
-            // Sending NO_RESULT doesn't call any js callback method
-
-            // Setting keepCallback to false would make sure that the callback is deleted from
-            // memory after this call
+            /*
+             * Delete old callback Sending NO_RESULT doesn't call any js callback method
+             * Setting keepCallback to false would make sure that the callback is deleted
+             * from memory after this call
+             */
             result.setKeepCallback(false);
         }
         Boolean hasCallback = args.getBoolean(0);
@@ -141,8 +142,7 @@ public class ZendriveManager {
                 driveStartInfoObject.put(START_LOCATION_KEY, JSONObject.NULL);
             }
 
-            PluginResult result = new PluginResult(PluginResult.Status.OK,
-                    driveStartInfoObject);
+            PluginResult result = new PluginResult(PluginResult.Status.OK, driveStartInfoObject);
             result.setKeepCallback(true);
             processStartOfDriveCallback.sendPluginResult(result);
         } catch (JSONException e) {
@@ -192,8 +192,7 @@ public class ZendriveManager {
             }
             driveInfoObject.put(WAYPOINTS_KEY, waypointsArray);
 
-            PluginResult result = new PluginResult(PluginResult.Status.OK,
-                    driveInfoObject);
+            PluginResult result = new PluginResult(PluginResult.Status.OK, driveInfoObject);
             result.setKeepCallback(true);
             processEndOfDriveCallback.sendPluginResult(result);
         } catch (JSONException e) {
@@ -222,8 +221,8 @@ public class ZendriveManager {
     }
 
     private void displayOrHideLocationPermissionNotification(boolean isLocationPermissionGranted) {
-        NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager mNotificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
         if (isLocationPermissionGranted) {
             // Remove the displayed notification if any
             mNotificationManager.cancel(NotificationUtility.LOCATION_PERMISSION_DENIED_NOTIFICATION_ID);
@@ -245,14 +244,15 @@ public class ZendriveManager {
     }
 
     private void displayOrHideLocationSettingNotification(ZendriveLocationSettingsResult settingsResult) {
-        NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager mNotificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
         if (settingsResult.isSuccess()) {
             // Remove the displayed notification if any
             mNotificationManager.cancel(NotificationUtility.LOCATION_DISABLED_NOTIFICATION_ID);
         } else {
             // Notify user
-            Notification notification = NotificationUtility.createLocationSettingDisabledNotification(context, settingsResult);
+            Notification notification = NotificationUtility.createLocationSettingDisabledNotification(context,
+                    settingsResult);
             mNotificationManager.notify(NotificationUtility.LOCATION_DISABLED_NOTIFICATION_ID, notification);
         }
     }

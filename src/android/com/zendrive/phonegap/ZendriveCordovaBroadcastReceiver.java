@@ -23,15 +23,12 @@ public class ZendriveCordovaBroadcastReceiver extends ZendriveBroadcastReceiver 
 
     @Override
     public void onDriveEnd(Context context, EstimatedDriveInfo estimatedDriveInfo) {
-
         ZendriveManager.getSharedInstance().onDriveEnd(estimatedDriveInfo);
-
     }
 
     @Override
     public void onDriveAnalyzed(Context context, AnalyzedDriveInfo analyzedDriveInfo) {
         ZendriveManager.getSharedInstance().onDriveAnalyzed(analyzedDriveInfo);
-
     }
 
     @Override
@@ -48,5 +45,4 @@ public class ZendriveCordovaBroadcastReceiver extends ZendriveBroadcastReceiver 
     public void onLocationPermissionsChange(Context context, boolean granted) {
         ZendriveManager.getSharedInstance().onLocationPermissionsChange(granted);
     }
-
 }

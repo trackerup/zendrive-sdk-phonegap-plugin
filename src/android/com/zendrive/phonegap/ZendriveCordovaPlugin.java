@@ -35,6 +35,7 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
         if (CORDOVA_INSTANCE == null) {
             CORDOVA_INSTANCE = cordova;
         }
+        ZendriveManager.init(cordova.getContext());
         requestPermissions();
     }
 
