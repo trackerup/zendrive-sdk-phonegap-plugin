@@ -45,6 +45,12 @@
         <source-file src="src/android/com/zendrive/phonegap/NotificationUtility.java" target-dir="src/com/zendrive/phonegap" />
         <source-file src="src/android/com/zendrive/phonegap/ZendriveManager.java" target-dir="src/com/zendrive/phonegap" />
 
+        <resource-file src="src/android/res/plugin-strings.xml" target="res/values/plugin-strings.xml" />
+        <resource-file src="src/android/res/drawable-hdpi" target="res/drawable-hdpi" />
+        <resource-file src="src/android/res/drawable-mdpi" target="res/drawable-mdpi" />
+        <resource-file src="src/android/res/drawable-xhdpi" target="res/drawable-xhdpi" />
+        <resource-file src="src/android/res/drawable-xxhdpi" target="res/drawable-xxhdpi" />
+
         <!-- External Libraries -->
         <framework src="com.google.android.gms:play-services-location:8.4.0" />
         <framework src="src/android/build-extras.gradle" custom="true" type="gradleReference" />

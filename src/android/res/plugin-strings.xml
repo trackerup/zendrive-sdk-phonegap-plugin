@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="enable_location">Enable Location</string>
+    <string name="location_disabled">Location Disabled</string>
+    <string name="location_permission_denied">Location Permission Denied</string>
+    <string name="grant_location_permission">Grant Location Permission</string>
+</resources>

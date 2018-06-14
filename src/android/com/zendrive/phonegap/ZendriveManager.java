@@ -1,7 +1,11 @@
 package com.zendrive.phonegap;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
-
+import android.content.Intent;
+import android.os.Build;
+import android.support.v4.content.LocalBroadcastManager;
 import com.zendrive.sdk.AccidentInfo;
 import com.zendrive.sdk.ActiveDriveInfo;
 import com.zendrive.sdk.AnalyzedDriveInfo;
@@ -11,9 +15,6 @@ import com.zendrive.sdk.DriveStartInfo;
 import com.zendrive.sdk.LocationPointWithTimestamp;
 import com.zendrive.sdk.Zendrive;
 import com.zendrive.sdk.ZendriveLocationSettingsResult;
-import com.zendrive.sdk.ZendriveOperationCallback;
-import com.zendrive.sdk.ZendriveOperationResult;
-
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
@@ -28,21 +29,26 @@ public class ZendriveManager {
 
     // String Constants
     // ZendriveLocationPoint dictionary keys
-    private static final String kLatitudeKey = "latitude";
-    private static final String kLongitudeKey = "longitude";
+    private static final String LATITUDE_KEY = "latitude";
+    private static final String LONGITUDE_KEY = "longitude";
 
     // ZendriveDriveStartInfo dictionary keys
-    private static final String kStartTimestampKey = "startTimestamp";
-    private static final String kStartLocationKey = "startLocation";
+    private static final String START_TIMESTAMP_KEY = "startTimestamp";
+    private static final String START_LOCATION_KEY = "startLocation";
 
     // ZendriveDriveInfo dictionary keys
-    private static final String kIsValidKey = "isValid";
-    private static final String kEndTimestampKey = "endTimestamp";
-    private static final String kAverageSpeedKey = "averageSpeed";
-    private static final String kDistanceKey = "distance";
-    private static final String kWaypointsKey = "waypoints";
-    private static final String kTrackingIdKey = "trackingId";
-    private static final String kSessionIdKey = "sessionId";
+    private static final String IS_VALID_KEY = "isValid";
+    private static final String END_TIMESTAMP_KEY = "endTimestamp";
+    private static final String AVERAGE_SPEED_KEY = "averageSpeed";
+    private static final String DISTANCE_KEY = "distance";
+    private static final String WAYPOINTS_KEY = "waypoints";
+    private static final String TRACKING_ID_KEY = "trackingId";
+    private static final String SESSION_ID_KEY = "sessionId";
+
+    private static final String EVENT_LOCATION_PERMISSION_CHANGE = "location_permission_change";
+    private static final String EVENT_LOCATION_SETTING_CHANGE = "location_setting_change";
+
+    private final Context context;
 
     // Callbacks
     private CallbackContext processStartOfDriveCallback;
@@ -52,20 +58,28 @@ public class ZendriveManager {
 
     public static synchronized ZendriveManager getSharedInstance() {
         if (sharedInstance == null) {
-            sharedInstance = new ZendriveManager();
+            throw new IllegalStateException("This class has to be initialized first!");
         }
         return sharedInstance;
     }
 
+    public static void init(Context context) {
+        if (sharedInstance != null) {
+            return;
+        }
+        sharedInstance = new ZendriveManager(context);
+    }
+
+    private ZendriveManager(Context context) {
+        this.context = context.getApplicationContext();
+    }
+
     public static synchronized void teardown(Context context, final CallbackContext callbackContext) {
-        Zendrive.teardown(context, new ZendriveOperationCallback() {
-            @Override
-            public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
-                if (zendriveOperationResult.isSuccess()) {
-                    callbackContext.success();
-                } else {
-                    callbackContext.error(zendriveOperationResult.getErrorMessage());
-                }
+        Zendrive.teardown(context, zendriveOperationResult -> {
+            if (zendriveOperationResult.isSuccess()) {
+                callbackContext.success();
+            } else {
+                callbackContext.error(zendriveOperationResult.getErrorMessage());
             }
         });
         sharedInstance = null;
@@ -75,11 +89,10 @@ public class ZendriveManager {
             throws JSONException {
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         if (null != this.processStartOfDriveCallback) {
-            /*
-             * Delete old callback Sending NO_RESULT doesn't call any js callback method
-             * Setting keepCallback to false would make sure that the callback is deleted
-             * from memory after this call
-             */
+            /* Delete old callback
+             * Sending NO_RESULT doesn't call any js callback method
+             * Setting keepCallback to false would make sure that the callback is deleted from
+             * memory after this call */
             result.setKeepCallback(false);
         }
         Boolean hasCallback = args.getBoolean(0);
@@ -95,11 +108,11 @@ public class ZendriveManager {
             throws JSONException {
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         if (null != this.processEndOfDriveCallback) {
-            /*
-             * Delete old callback Sending NO_RESULT doesn't call any js callback method
-             * Setting keepCallback to false would make sure that the callback is deleted
-             * from memory after this call
-             */
+            // Delete old callback
+            // Sending NO_RESULT doesn't call any js callback method
+
+            // Setting keepCallback to false would make sure that the callback is deleted from
+            // memory after this call
             result.setKeepCallback(false);
         }
         Boolean hasCallback = args.getBoolean(0);
@@ -117,18 +130,19 @@ public class ZendriveManager {
         }
         try {
             JSONObject driveStartInfoObject = new JSONObject();
-            driveStartInfoObject.put(kStartTimestampKey, driveStartInfo.startTimeMillis);
+            driveStartInfoObject.put(START_TIMESTAMP_KEY, driveStartInfo.startTimeMillis);
 
             if (null != driveStartInfo.startLocation) {
                 JSONObject driveStartLocationObject = new JSONObject();
-                driveStartLocationObject.put(kLatitudeKey, driveStartInfo.startLocation.latitude);
-                driveStartLocationObject.put(kLongitudeKey, driveStartInfo.startLocation.longitude);
-                driveStartInfoObject.put(kStartLocationKey, driveStartLocationObject);
+                driveStartLocationObject.put(LATITUDE_KEY, driveStartInfo.startLocation.latitude);
+                driveStartLocationObject.put(LONGITUDE_KEY, driveStartInfo.startLocation.longitude);
+                driveStartInfoObject.put(START_LOCATION_KEY, driveStartLocationObject);
             } else {
-                driveStartInfoObject.put(kStartLocationKey, JSONObject.NULL);
+                driveStartInfoObject.put(START_LOCATION_KEY, JSONObject.NULL);
             }
 
-            PluginResult result = new PluginResult(PluginResult.Status.OK, driveStartInfoObject);
+            PluginResult result = new PluginResult(PluginResult.Status.OK,
+                    driveStartInfoObject);
             result.setKeepCallback(true);
             processStartOfDriveCallback.sendPluginResult(result);
         } catch (JSONException e) {
@@ -140,10 +154,10 @@ public class ZendriveManager {
         try {
             JSONObject activeDriveInfoObject = new JSONObject();
             ActiveDriveInfo activeDriveInfo = Zendrive.getActiveDriveInfo(context);
-            activeDriveInfoObject.put(kStartTimestampKey, activeDriveInfo.startTimeMillis);
-            activeDriveInfoObject.put(kTrackingIdKey,
+            activeDriveInfoObject.put(START_TIMESTAMP_KEY, activeDriveInfo.startTimeMillis);
+            activeDriveInfoObject.put(TRACKING_ID_KEY,
                     (activeDriveInfo.trackingId != null) ? activeDriveInfo.trackingId : JSONObject.NULL);
-            activeDriveInfoObject.put(kSessionIdKey,
+            activeDriveInfoObject.put(SESSION_ID_KEY,
                     (activeDriveInfo.sessionId != null) ? activeDriveInfo.sessionId : JSONObject.NULL);
             return activeDriveInfoObject;
         } catch (Exception e) {
@@ -157,11 +171,11 @@ public class ZendriveManager {
         }
         try {
             JSONObject driveInfoObject = new JSONObject();
-            driveInfoObject.put(kStartTimestampKey, driveInfo.startTimeMillis);
-            driveInfoObject.put(kEndTimestampKey, driveInfo.endTimeMillis);
+            driveInfoObject.put(START_TIMESTAMP_KEY, driveInfo.startTimeMillis);
+            driveInfoObject.put(END_TIMESTAMP_KEY, driveInfo.endTimeMillis);
 
-            driveInfoObject.put(kAverageSpeedKey, driveInfo.averageSpeed);
-            driveInfoObject.put(kDistanceKey, driveInfo.distanceMeters);
+            driveInfoObject.put(AVERAGE_SPEED_KEY, driveInfo.averageSpeed);
+            driveInfoObject.put(DISTANCE_KEY, driveInfo.distanceMeters);
 
             int waypointsCount = 0;
             if (null != driveInfo.waypoints) {
@@ -172,13 +186,14 @@ public class ZendriveManager {
                 LocationPointWithTimestamp locationPoint = driveInfo.waypoints.get(i);
 
                 JSONObject driveLocationObject = new JSONObject();
-                driveLocationObject.put(kLatitudeKey, locationPoint.location.latitude);
-                driveLocationObject.put(kLongitudeKey, locationPoint.location.longitude);
+                driveLocationObject.put(LATITUDE_KEY, locationPoint.location.latitude);
+                driveLocationObject.put(LONGITUDE_KEY, locationPoint.location.longitude);
                 waypointsArray.put(driveLocationObject);
             }
-            driveInfoObject.put(kWaypointsKey, waypointsArray);
+            driveInfoObject.put(WAYPOINTS_KEY, waypointsArray);
 
-            PluginResult result = new PluginResult(PluginResult.Status.OK, driveInfoObject);
+            PluginResult result = new PluginResult(PluginResult.Status.OK,
+                    driveInfoObject);
             result.setKeepCallback(true);
             processEndOfDriveCallback.sendPluginResult(result);
         } catch (JSONException e) {
@@ -194,12 +209,52 @@ public class ZendriveManager {
 
     }
 
-    public void onLocationPermissionsChange(boolean b) {
+    public void onLocationPermissionsChange(boolean granted) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            displayOrHideLocationPermissionNotification(granted);
+            Intent intent = new Intent(EVENT_LOCATION_PERMISSION_CHANGE);
+            intent.putExtra(EVENT_LOCATION_PERMISSION_CHANGE, granted);
+            LocalBroadcastManager.getInstance(this.context).sendBroadcast(intent);
 
+        } else {
+            throw new RuntimeException("Callback on non marshmallow sdk");
+        }
     }
 
-    public void onLocationSettingsChange(ZendriveLocationSettingsResult zendriveLocationSettingsResult) {
+    private void displayOrHideLocationPermissionNotification(boolean isLocationPermissionGranted) {
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (isLocationPermissionGranted) {
+            // Remove the displayed notification if any
+            mNotificationManager.cancel(NotificationUtility.LOCATION_PERMISSION_DENIED_NOTIFICATION_ID);
+        } else {
+            // Notify user
+            Notification notification = NotificationUtility.createLocationPermissionDeniedNotification(context);
+            mNotificationManager.notify(NotificationUtility.LOCATION_PERMISSION_DENIED_NOTIFICATION_ID, notification);
+        }
+    }
 
+    /**
+     * Location settings on the device changed.
+     */
+    public void onLocationSettingsChange(ZendriveLocationSettingsResult settingsResult) {
+        displayOrHideLocationSettingNotification(settingsResult);
+        Intent intent = new Intent(EVENT_LOCATION_SETTING_CHANGE);
+        intent.putExtra(EVENT_LOCATION_SETTING_CHANGE, settingsResult);
+        LocalBroadcastManager.getInstance(this.context).sendBroadcast(intent);
+    }
+
+    private void displayOrHideLocationSettingNotification(ZendriveLocationSettingsResult settingsResult) {
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (settingsResult.isSuccess()) {
+            // Remove the displayed notification if any
+            mNotificationManager.cancel(NotificationUtility.LOCATION_DISABLED_NOTIFICATION_ID);
+        } else {
+            // Notify user
+            Notification notification = NotificationUtility.createLocationSettingDisabledNotification(context, settingsResult);
+            mNotificationManager.notify(NotificationUtility.LOCATION_DISABLED_NOTIFICATION_ID, notification);
+        }
     }
 
     public void onDriveAnalyzed(AnalyzedDriveInfo analyzedDriveInfo) {
