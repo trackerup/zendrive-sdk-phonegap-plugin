@@ -1,25 +1,18 @@
 package com.zendrive.phonegap;
 
+import android.Manifest.permission;
+import android.content.pm.PackageManager;
+import com.zendrive.sdk.Zendrive;
+import com.zendrive.sdk.ZendriveConfiguration;
+import com.zendrive.sdk.ZendriveDriveDetectionMode;
+import com.zendrive.sdk.ZendriveDriverAttributes;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.JSONException;
-
-import com.zendrive.sdk.ActiveDriveInfo;
-import com.zendrive.sdk.DriveInfo;
-import com.zendrive.sdk.DriveStartInfo;
-import com.zendrive.sdk.LocationPoint;
-import com.zendrive.sdk.Zendrive;
-import com.zendrive.sdk.ZendriveBroadcastReceiver;
-import com.zendrive.sdk.ZendriveConfiguration;
-import com.zendrive.sdk.ZendriveDriveDetectionMode;
-import com.zendrive.sdk.ZendriveDriverAttributes;
-import com.zendrive.sdk.ZendriveNotificationProvider;
-import com.zendrive.sdk.ZendriveOperationCallback;
-import com.zendrive.sdk.ZendriveOperationResult;
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -29,43 +22,54 @@ import java.util.Iterator;
  */
 public class ZendriveCordovaPlugin extends CordovaPlugin {
 
-    public static CordovaInterface CORDOVA;
+    private static CordovaInterface CORDOVA_INSTANCE;
+
+    private static final String PERMISSION_DENIED_ERROR = "Location permission denied by user";
+    private static final int LOCATION_PERMISSION_REQUEST = 42;
+
+    private CallbackContext callbackContext;
 
     @Override
-    protected void pluginInitialize() {
+    protected synchronized void pluginInitialize() {
         super.pluginInitialize();
-        CORDOVA = cordova;
+        if (CORDOVA_INSTANCE == null) {
+            CORDOVA_INSTANCE = cordova;
+        }
+        requestPermissions();
+    }
+
+    static CordovaInterface getCordovaInstance() {
+        return CORDOVA_INSTANCE;
     }
 
     @Override
     public boolean execute(final String action, final JSONArray args, final CallbackContext callbackContext)
             throws JSONException {
-
-        cordova.getThreadPool().execute(new Runnable() {
-            public void run() {
+        this.callbackContext = callbackContext;
+        cordova.getThreadPool().execute(() -> {
                 try {
                     if (action.equals("setup")) {
-                        setup(args, callbackContext);
+                    setup(args);
                     } else if (action.equals("teardown")) {
-                        teardown(args, callbackContext);
+                    teardown(args);
 
                     } else if (action.equals("startDrive")) {
-                        startDrive(args, callbackContext);
+                    startDrive(args);
 
                     } else if (action.equals("getActiveDriveInfo")) {
-                        getActiveDriveInfo(callbackContext);
+                    getActiveDriveInfo();
 
                     } else if (action.equals("stopDrive")) {
-                        stopDrive(args, callbackContext);
+                    stopDrive(args);
 
                     } else if (action.equals("startSession")) {
-                        startSession(args, callbackContext);
+                    startSession(args);
 
                     } else if (action.equals("stopSession")) {
-                        stopSession(args, callbackContext);
+                    stopSession(args);
 
                     } else if (action.equals("setDriveDetectionMode")) {
-                        setDriveDetectionMode(args, callbackContext);
+                    setDriveDetectionMode(args);
 
                     } else if (action.equals("setProcessStartOfDriveDelegateCallback")) {
                         ZendriveManager.getSharedInstance().setProcessStartOfDriveDelegateCallback(args,
@@ -79,13 +83,24 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
                 } catch (JSONException e) {
                     callbackContext.error(e.getMessage());
                 }
-            }
         });
 
         return true;
     }
 
-    private void setup(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    @Override
+    public void onRequestPermissionResult(int requestCode, String[] permissions,
+                                          int[] grantResults) throws JSONException {
+        for (int grant : grantResults) {
+            if (grant == PackageManager.PERMISSION_DENIED) {
+                this.callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, PERMISSION_DENIED_ERROR));
+                return;
+            }
+        }
+    }
+
+    private void setup(JSONArray args) throws JSONException {
+
         JSONObject configJsonObj = args.getJSONObject(0);
         if (configJsonObj == null) {
             callbackContext.error("Wrong configuration supplied");
@@ -123,28 +138,28 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
                 });
     }
 
-    private void teardown(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    private void requestPermissions() {
+        cordova.requestPermission(this, LOCATION_PERMISSION_REQUEST, permission.ACCESS_FINE_LOCATION);
+    }
+
+    private void teardown(JSONArray args) throws JSONException {
         ZendriveManager.getSharedInstance().teardown(this.cordova.getActivity().getApplicationContext(),
                 callbackContext);
         callbackContext.success();
     }
 
-    private void startDrive(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    private void startDrive(JSONArray args) throws JSONException {
         Zendrive.startDrive(this.cordova.getActivity().getApplication().getApplicationContext(), args.getString(0),
-                new ZendriveOperationCallback() {
-                    @Override
-                    public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
+                zendriveOperationResult -> {
                         if (zendriveOperationResult.isSuccess()) {
                             callbackContext.success();
                         } else {
                             callbackContext.error(zendriveOperationResult.getErrorMessage());
                         }
-                    }
                 });
-
     }
 
-    private void getActiveDriveInfo(final CallbackContext callbackContext) throws JSONException {
+    private void getActiveDriveInfo() throws JSONException {
         JSONObject activeDriveInfoObject = ZendriveManager.getSharedInstance()
                 .getActiveDriveInfo(this.cordova.getActivity().getApplicationContext(), callbackContext);
         PluginResult result;
@@ -158,30 +173,27 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
         callbackContext.sendPluginResult(result);
     }
 
-    private void stopDrive(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    private void stopDrive(JSONArray args) throws JSONException {
         Zendrive.stopDrive(this.cordova.getActivity().getApplicationContext(), args.getString(0),
-                new ZendriveOperationCallback() {
-                    @Override
-                    public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
-                        if (zendriveOperationResult.isSuccess()) {
-                            callbackContext.success();
-                        } else {
-                            callbackContext.error(zendriveOperationResult.getErrorMessage());
-                        }
+                zendriveOperationResult -> {
+                    if (zendriveOperationResult.isSuccess()) {
+                        callbackContext.success();
+                    } else {
+                        callbackContext.error(zendriveOperationResult.getErrorMessage());
                     }
                 });
     }
 
-    private void startSession(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    private void startSession(JSONArray args) throws JSONException {
         Zendrive.startSession(this.cordova.getActivity().getApplicationContext(), args.getString(0));
     }
 
-    private void stopSession(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    private void stopSession(JSONArray args) throws JSONException {
         Zendrive.stopSession(this.cordova.getActivity().getApplicationContext());
         callbackContext.success();
     }
 
-    private void setDriveDetectionMode(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    private void setDriveDetectionMode(JSONArray args) throws JSONException {
         Integer driveDetectionModeInt = args.getInt(0);
         if (driveDetectionModeInt == null) {
             callbackContext.error("Invalid Zendrive drive detection mode");
@@ -190,14 +202,11 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
 
         ZendriveDriveDetectionMode mode = this.getDriveDetectionModeFromInt(driveDetectionModeInt);
         Zendrive.setZendriveDriveDetectionMode(this.cordova.getActivity().getApplicationContext(), mode,
-                new ZendriveOperationCallback() {
-                    @Override
-                    public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
-                        if (zendriveOperationResult.isSuccess()) {
-                            callbackContext.success();
-                        } else {
-                            callbackContext.error(zendriveOperationResult.getErrorMessage());
-                        }
+                zendriveOperationResult -> {
+                    if (zendriveOperationResult.isSuccess()) {
+                        callbackContext.success();
+                    } else {
+                        callbackContext.error(zendriveOperationResult.getErrorMessage());
                     }
                 });
     }

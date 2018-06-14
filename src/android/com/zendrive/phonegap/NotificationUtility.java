@@ -76,7 +76,7 @@ public class NotificationUtility {
 
     private static PendingIntent getNotificationClickIntent(Context context) {
         Intent notificationIntent = new Intent(context.getApplicationContext(),
-                ZendriveCordovaPlugin.CORDOVA.getActivity().getClass());
+                ZendriveCordovaPlugin.getCordovaInstance().getActivity().getClass());
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return PendingIntent.getActivity(context.getApplicationContext(), 0, notificationIntent, 0);
     }

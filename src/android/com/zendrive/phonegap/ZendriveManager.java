@@ -49,6 +49,7 @@ public class ZendriveManager {
     private CallbackContext processEndOfDriveCallback;
 
     private static ZendriveManager sharedInstance;
+
     public static synchronized ZendriveManager getSharedInstance() {
         if (sharedInstance == null) {
             sharedInstance = new ZendriveManager();
@@ -60,9 +61,9 @@ public class ZendriveManager {
         Zendrive.teardown(context, new ZendriveOperationCallback() {
             @Override
             public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
-                if(zendriveOperationResult.isSuccess()){
+                if (zendriveOperationResult.isSuccess()) {
                     callbackContext.success();
-                }else{
+                } else {
                     callbackContext.error(zendriveOperationResult.getErrorMessage());
                 }
             }
@@ -72,44 +73,42 @@ public class ZendriveManager {
 
     public void setProcessStartOfDriveDelegateCallback(JSONArray args, final CallbackContext callbackContext)
             throws JSONException {
+        PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         if (null != this.processStartOfDriveCallback) {
-            // Delete old callback
-            // Sending NO_RESULT doesn't call any js callback method
-            PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
-
-            // Setting keepCallback to false would make sure that the callback is deleted from
-            // memory after this call
+            /*
+             * Delete old callback Sending NO_RESULT doesn't call any js callback method
+             * Setting keepCallback to false would make sure that the callback is deleted
+             * from memory after this call
+             */
             result.setKeepCallback(false);
-            processStartOfDriveCallback.sendPluginResult(result);
         }
         Boolean hasCallback = args.getBoolean(0);
         if (hasCallback) {
             this.processStartOfDriveCallback = callbackContext;
-        }
-        else {
+        } else {
             this.processStartOfDriveCallback = null;
         }
+        callbackContext.sendPluginResult(result);
     }
 
     public void setProcessEndOfDriveDelegateCallback(JSONArray args, final CallbackContext callbackContext)
             throws JSONException {
+        PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         if (null != this.processEndOfDriveCallback) {
-            // Delete old callback
-            // Sending NO_RESULT doesn't call any js callback method
-            PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
-
-            // Setting keepCallback to false would make sure that the callback is deleted from
-            // memory after this call
+            /*
+             * Delete old callback Sending NO_RESULT doesn't call any js callback method
+             * Setting keepCallback to false would make sure that the callback is deleted
+             * from memory after this call
+             */
             result.setKeepCallback(false);
-            processEndOfDriveCallback.sendPluginResult(result);
         }
         Boolean hasCallback = args.getBoolean(0);
         if (hasCallback) {
             this.processEndOfDriveCallback = callbackContext;
-        }
-        else {
+        } else {
             this.processEndOfDriveCallback = null;
         }
+        callbackContext.sendPluginResult(result);
     }
 
     public void onDriveStart(DriveStartInfo driveStartInfo) {
@@ -125,13 +124,11 @@ public class ZendriveManager {
                 driveStartLocationObject.put(kLatitudeKey, driveStartInfo.startLocation.latitude);
                 driveStartLocationObject.put(kLongitudeKey, driveStartInfo.startLocation.longitude);
                 driveStartInfoObject.put(kStartLocationKey, driveStartLocationObject);
-            }
-            else {
+            } else {
                 driveStartInfoObject.put(kStartLocationKey, JSONObject.NULL);
             }
 
-            PluginResult result = new PluginResult(PluginResult.Status.OK,
-                    driveStartInfoObject);
+            PluginResult result = new PluginResult(PluginResult.Status.OK, driveStartInfoObject);
             result.setKeepCallback(true);
             processStartOfDriveCallback.sendPluginResult(result);
         } catch (JSONException e) {
@@ -142,14 +139,15 @@ public class ZendriveManager {
     public JSONObject getActiveDriveInfo(Context context, final CallbackContext callbackContext) {
         try {
             JSONObject activeDriveInfoObject = new JSONObject();
-            ActiveDriveInfo activeDriveInfo = Zendrive.getActiveDriveInfo(context );
+            ActiveDriveInfo activeDriveInfo = Zendrive.getActiveDriveInfo(context);
             activeDriveInfoObject.put(kStartTimestampKey, activeDriveInfo.startTimeMillis);
             activeDriveInfoObject.put(kTrackingIdKey,
-                    (activeDriveInfo.trackingId != null) ? activeDriveInfo.trackingId:JSONObject.NULL);
+                    (activeDriveInfo.trackingId != null) ? activeDriveInfo.trackingId : JSONObject.NULL);
             activeDriveInfoObject.put(kSessionIdKey,
-                    (activeDriveInfo.sessionId != null) ? activeDriveInfo.sessionId:JSONObject.NULL);
+                    (activeDriveInfo.sessionId != null) ? activeDriveInfo.sessionId : JSONObject.NULL);
             return activeDriveInfoObject;
-        }  catch (Exception e) {}
+        } catch (Exception e) {
+        }
         return null;
     }
 
@@ -170,7 +168,7 @@ public class ZendriveManager {
                 waypointsCount = driveInfo.waypoints.size();
             }
             JSONArray waypointsArray = new JSONArray();
-            for (int i = 0; i<waypointsCount; i++) {
+            for (int i = 0; i < waypointsCount; i++) {
                 LocationPointWithTimestamp locationPoint = driveInfo.waypoints.get(i);
 
                 JSONObject driveLocationObject = new JSONObject();
@@ -180,8 +178,7 @@ public class ZendriveManager {
             }
             driveInfoObject.put(kWaypointsKey, waypointsArray);
 
-            PluginResult result = new PluginResult(PluginResult.Status.OK,
-                    driveInfoObject);
+            PluginResult result = new PluginResult(PluginResult.Status.OK, driveInfoObject);
             result.setKeepCallback(true);
             processEndOfDriveCallback.sendPluginResult(result);
         } catch (JSONException e) {
