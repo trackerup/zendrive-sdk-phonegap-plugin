@@ -37,12 +37,12 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <receiver android:name="com.zendrive.phonegap.ZendriveCordovaBroadcastReceiver" android:label="ZendriveCordovaBroadcastReceiver"></receiver>
-            <service android:name="com.zendrive.sdk.services.UserActivityService" />
-            <service android:name="com.zendrive.sdk.services.ZendriveService" />
         </config-file>
 
         <source-file src="src/android/com/zendrive/phonegap/ZendriveCordovaPlugin.java" target-dir="src/com/zendrive/phonegap" />
         <source-file src="src/android/com/zendrive/phonegap/ZendriveCordovaBroadcastReceiver.java" target-dir="src/com/zendrive/phonegap" />
+        <source-file src="src/android/com/zendrive/phonegap/ZendriveNotificationProviderImpl.java" target-dir="src/com/zendrive/phonegap" />
+        <source-file src="src/android/com/zendrive/phonegap/NotificationUtility.java" target-dir="src/com/zendrive/phonegap" />
         <source-file src="src/android/com/zendrive/phonegap/ZendriveManager.java" target-dir="src/com/zendrive/phonegap" />
 
         <!-- External Libraries -->

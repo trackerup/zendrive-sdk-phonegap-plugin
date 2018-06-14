@@ -1,12 +1,8 @@
 package com.zendrive.phonegap;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-
 import com.zendrive.sdk.AccidentInfo;
 import com.zendrive.sdk.AnalyzedDriveInfo;
-import com.zendrive.sdk.DriveInfo;
 import com.zendrive.sdk.DriveResumeInfo;
 import com.zendrive.sdk.DriveStartInfo;
 import com.zendrive.sdk.EstimatedDriveInfo;

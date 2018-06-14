@@ -28,6 +28,15 @@ import java.util.Iterator;
  * Created by chandan on 11/3/14.
  */
 public class ZendriveCordovaPlugin extends CordovaPlugin {
+
+    public static CordovaInterface CORDOVA;
+
+    @Override
+    protected void pluginInitialize() {
+        super.pluginInitialize();
+        CORDOVA = cordova;
+    }
+
     @Override
     public boolean execute(final String action, final JSONArray args, final CallbackContext callbackContext)
             throws JSONException {
@@ -104,14 +113,12 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
 
         // setup Zendrive SDK
         Zendrive.setup(this.cordova.getActivity().getApplicationContext(), configuration,
-                ZendriveBroadcastReceiver.class, ZendriveNotificationProvider.class, new ZendriveOperationCallback() {
-                    @Override
-                    public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
-                        if (zendriveOperationResult.isSuccess()) {
-                            callbackContext.success();
-                        } else {
-                            callbackContext.error("Zendrive setup failed");
-                        }
+                ZendriveCordovaBroadcastReceiver.class, ZendriveNotificationProviderImpl.class,
+                zendriveOperationResult -> {
+                    if (zendriveOperationResult.isSuccess()) {
+                        callbackContext.success();
+                    } else {
+                        callbackContext.error("Zendrive setup failed");
                     }
                 });
     }

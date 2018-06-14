@@ -1,11 +1,5 @@
 package com.zendrive.phonegap;
 
-import com.zendrive.sdk.AccidentInfo;
-import com.zendrive.sdk.DriveInfo;
-import com.zendrive.sdk.DriveResumeInfo;
-import com.zendrive.sdk.DriveStartInfo;
-import com.zendrive.sdk.ZendriveLocationSettingsResult;
-
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
