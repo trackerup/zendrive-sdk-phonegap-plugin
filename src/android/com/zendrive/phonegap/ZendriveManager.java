@@ -14,7 +14,9 @@ import com.zendrive.sdk.DriveResumeInfo;
 import com.zendrive.sdk.DriveStartInfo;
 import com.zendrive.sdk.LocationPointWithTimestamp;
 import com.zendrive.sdk.Zendrive;
-import com.zendrive.sdk.ZendriveLocationSettingsResult;
+import com.zendrive.sdk.ZendriveOperationCallback;
+import com.zendrive.sdk.ZendriveOperationResult;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
@@ -75,13 +77,17 @@ public class ZendriveManager {
     }
 
     public static synchronized void teardown(Context context, final CallbackContext callbackContext) {
-        Zendrive.teardown(context, zendriveOperationResult -> {
-            if (zendriveOperationResult.isSuccess()) {
-                callbackContext.success();
-            } else {
-                callbackContext.error(zendriveOperationResult.getErrorMessage());
-            }
-        });
+        Zendrive.teardown(context,
+                new ZendriveOperationCallback() {
+                    @Override
+                    public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
+                        if (zendriveOperationResult.isSuccess()) {
+                            callbackContext.success();
+                        } else {
+                            callbackContext.error(zendriveOperationResult.getErrorMessage());
+                        }
+                    }
+                });
         sharedInstance = null;
     }
 
@@ -228,32 +234,10 @@ public class ZendriveManager {
             mNotificationManager.cancel(NotificationUtility.LOCATION_PERMISSION_DENIED_NOTIFICATION_ID);
         } else {
             // Notify user
+            /*
             Notification notification = NotificationUtility.createLocationPermissionDeniedNotification(context);
             mNotificationManager.notify(NotificationUtility.LOCATION_PERMISSION_DENIED_NOTIFICATION_ID, notification);
-        }
-    }
-
-    /**
-     * Location settings on the device changed.
-     */
-    public void onLocationSettingsChange(ZendriveLocationSettingsResult settingsResult) {
-        displayOrHideLocationSettingNotification(settingsResult);
-        Intent intent = new Intent(EVENT_LOCATION_SETTING_CHANGE);
-        intent.putExtra(EVENT_LOCATION_SETTING_CHANGE, settingsResult);
-        LocalBroadcastManager.getInstance(this.context).sendBroadcast(intent);
-    }
-
-    private void displayOrHideLocationSettingNotification(ZendriveLocationSettingsResult settingsResult) {
-        NotificationManager mNotificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        if (settingsResult.isSuccess()) {
-            // Remove the displayed notification if any
-            mNotificationManager.cancel(NotificationUtility.LOCATION_DISABLED_NOTIFICATION_ID);
-        } else {
-            // Notify user
-            Notification notification = NotificationUtility.createLocationSettingDisabledNotification(context,
-                    settingsResult);
-            mNotificationManager.notify(NotificationUtility.LOCATION_DISABLED_NOTIFICATION_ID, notification);
+            */
         }
     }
 

@@ -7,7 +7,6 @@ import com.zendrive.sdk.DriveResumeInfo;
 import com.zendrive.sdk.DriveStartInfo;
 import com.zendrive.sdk.EstimatedDriveInfo;
 import com.zendrive.sdk.ZendriveBroadcastReceiver;
-import com.zendrive.sdk.ZendriveLocationSettingsResult;
 
 public class ZendriveCordovaBroadcastReceiver extends ZendriveBroadcastReceiver {
 
@@ -37,12 +36,9 @@ public class ZendriveCordovaBroadcastReceiver extends ZendriveBroadcastReceiver 
     }
 
     @Override
-    public void onLocationSettingsChange(Context context, ZendriveLocationSettingsResult locationSettingsResult) {
-        ZendriveManager.getSharedInstance().onLocationSettingsChange(locationSettingsResult);
+    public void onZendriveSettingsConfigChanged(Context context, boolean b, boolean b1) {
+
     }
 
-    @Override
-    public void onLocationPermissionsChange(Context context, boolean granted) {
-        ZendriveManager.getSharedInstance().onLocationPermissionsChange(granted);
-    }
+
 }

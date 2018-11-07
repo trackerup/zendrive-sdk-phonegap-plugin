@@ -8,9 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import com.zendrive.sdk.ZendriveLocationSettingsResult;
 import org.apache.cordova.BuildConfig;
-import org.core_concepts.zendrivetest.R;
 
 /**
  * Utility to create notifications to show to the user when the Zendrive SDK has
@@ -82,57 +80,5 @@ public class NotificationUtility {
         return PendingIntent.getActivity(context.getApplicationContext(), 0, notificationIntent, 0);
     }
 
-    /**
-     * Create a notification when high accuracy location is disabled on the device.
-     * @param context App context
-     * @param settingsResult to get potential resolution from play services
-     * @return the created notification.
-     */
-    public static Notification createLocationSettingDisabledNotification(Context context,
-                                                                         ZendriveLocationSettingsResult settingsResult) {
-        createNotificationChannels(context);
-        if (BuildConfig.DEBUG && settingsResult.isSuccess()) {
-            throw new AssertionError("Only expected failed settings result");
-        }
-        // TODO: use the result from the callback and show appropriate message and intent
-        Intent callGPSSettingIntent = new Intent(
-                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0,
-                callGPSSettingIntent, 0);
 
-        return new NotificationCompat.Builder(context.getApplicationContext(), LOCATION_CHANNEL_KEY)
-                .setContentTitle(context.getResources().getString(R.string.location_disabled))
-                .setTicker(context.getResources().getString(R.string.location_disabled))
-                .setContentText(context.getResources().getString(R.string.enable_location))
-                .setSmallIcon(R.drawable.ic_notification)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setContentIntent(pendingIntent)
-                .setCategory(NotificationCompat.CATEGORY_ERROR)
-                .build();
-    }
-
-    /**
-     * Create a notification when location permission is denied to the application.
-     * @param context App context
-     * @return the created notification.
-     */
-    public static Notification createLocationPermissionDeniedNotification(Context context) {
-        createNotificationChannels(context);
-        // TODO: The click intent should not point to location settings. Perhaps we can load
-        // the app permissions tab.
-        Intent callGPSSettingIntent = new Intent(
-                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0,
-                callGPSSettingIntent, 0);
-
-        return new NotificationCompat.Builder(context.getApplicationContext(), LOCATION_CHANNEL_KEY)
-                .setContentTitle(context.getResources().getString(R.string.location_permission_denied))
-                .setTicker(context.getResources().getString(R.string.location_permission_denied))
-                .setContentText(context.getResources().getString(R.string.grant_location_permission))
-                .setSmallIcon(R.drawable.ic_notification)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setCategory(NotificationCompat.CATEGORY_ERROR)
-                .setContentIntent(pendingIntent)
-                .build();
-    }
 }

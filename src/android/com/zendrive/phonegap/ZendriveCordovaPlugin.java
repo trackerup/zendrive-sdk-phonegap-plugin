@@ -6,6 +6,9 @@ import com.zendrive.sdk.Zendrive;
 import com.zendrive.sdk.ZendriveConfiguration;
 import com.zendrive.sdk.ZendriveDriveDetectionMode;
 import com.zendrive.sdk.ZendriveDriverAttributes;
+import com.zendrive.sdk.ZendriveOperationCallback;
+import com.zendrive.sdk.ZendriveOperationResult;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
@@ -35,7 +38,7 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
         if (CORDOVA_INSTANCE == null) {
             CORDOVA_INSTANCE = cordova;
         }
-        ZendriveManager.init(cordova.getContext());
+        ZendriveManager.init(cordova.getActivity().getApplicationContext());
         requestPermissions();
     }
 
@@ -47,30 +50,32 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
     public boolean execute(final String action, final JSONArray args, final CallbackContext callbackContext)
             throws JSONException {
         this.callbackContext = callbackContext;
-        cordova.getThreadPool().execute(() -> {
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
                 try {
                     if (action.equals("setup")) {
-                    setup(args);
+                        setup(args);
                     } else if (action.equals("teardown")) {
-                    teardown(args);
+                        teardown(args);
 
                     } else if (action.equals("startDrive")) {
-                    startDrive(args);
+                        startDrive(args);
 
                     } else if (action.equals("getActiveDriveInfo")) {
-                    getActiveDriveInfo();
+                        getActiveDriveInfo();
 
                     } else if (action.equals("stopDrive")) {
-                    stopDrive(args);
+                        stopDrive(args);
 
                     } else if (action.equals("startSession")) {
-                    startSession(args);
+                        startSession(args);
 
                     } else if (action.equals("stopSession")) {
-                    stopSession(args);
+                        stopSession(args);
 
                     } else if (action.equals("setDriveDetectionMode")) {
-                    setDriveDetectionMode(args);
+                        setDriveDetectionMode(args);
 
                     } else if (action.equals("setProcessStartOfDriveDelegateCallback")) {
                         ZendriveManager.getSharedInstance().setProcessStartOfDriveDelegateCallback(args,
@@ -84,6 +89,7 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
                 } catch (JSONException e) {
                     callbackContext.error(e.getMessage());
                 }
+            }
         });
 
         return true;
@@ -130,11 +136,14 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
         // setup Zendrive SDK
         Zendrive.setup(this.cordova.getActivity().getApplicationContext(), configuration,
                 ZendriveCordovaBroadcastReceiver.class, ZendriveNotificationProviderImpl.class,
-                zendriveOperationResult -> {
-                    if (zendriveOperationResult.isSuccess()) {
-                        callbackContext.success();
-                    } else {
-                        callbackContext.error("Zendrive setup failed");
+                new ZendriveOperationCallback() {
+                    @Override
+                    public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
+                        if (zendriveOperationResult.isSuccess()) {
+                            callbackContext.success();
+                        } else {
+                            callbackContext.error("Zendrive setup failed");
+                        }
                     }
                 });
     }
@@ -151,12 +160,15 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
 
     private void startDrive(JSONArray args) throws JSONException {
         Zendrive.startDrive(this.cordova.getActivity().getApplication().getApplicationContext(), args.getString(0),
-                zendriveOperationResult -> {
+                new ZendriveOperationCallback() {
+                    @Override
+                    public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
                         if (zendriveOperationResult.isSuccess()) {
                             callbackContext.success();
                         } else {
                             callbackContext.error(zendriveOperationResult.getErrorMessage());
                         }
+                    }
                 });
     }
 
@@ -176,11 +188,14 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
 
     private void stopDrive(JSONArray args) throws JSONException {
         Zendrive.stopDrive(this.cordova.getActivity().getApplicationContext(), args.getString(0),
-                zendriveOperationResult -> {
-                    if (zendriveOperationResult.isSuccess()) {
-                        callbackContext.success();
-                    } else {
-                        callbackContext.error(zendriveOperationResult.getErrorMessage());
+                new ZendriveOperationCallback() {
+                    @Override
+                    public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
+                        if (zendriveOperationResult.isSuccess()) {
+                            callbackContext.success();
+                        } else {
+                            callbackContext.error(zendriveOperationResult.getErrorMessage());
+                        }
                     }
                 });
     }
@@ -203,11 +218,14 @@ public class ZendriveCordovaPlugin extends CordovaPlugin {
 
         ZendriveDriveDetectionMode mode = this.getDriveDetectionModeFromInt(driveDetectionModeInt);
         Zendrive.setZendriveDriveDetectionMode(this.cordova.getActivity().getApplicationContext(), mode,
-                zendriveOperationResult -> {
-                    if (zendriveOperationResult.isSuccess()) {
-                        callbackContext.success();
-                    } else {
-                        callbackContext.error(zendriveOperationResult.getErrorMessage());
+                new ZendriveOperationCallback() {
+                    @Override
+                    public void onCompletion(ZendriveOperationResult zendriveOperationResult) {
+                        if (zendriveOperationResult.isSuccess()) {
+                            callbackContext.success();
+                        } else {
+                            callbackContext.error(zendriveOperationResult.getErrorMessage());
+                        }
                     }
                 });
     }
